@@ -23,7 +23,7 @@ npm install react-native-vector-icons --save && react-native link react-native-v
 
 #### Step 2
 
-Install `react-native-bottom-drawer`
+Install `react-native-bottom-drawer`.
 
 ```
 npm install react-native-bottom-drawer --save
