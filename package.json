@@ -1,6 +1,6 @@
 {
   "name": "react-native-bottom-drawer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "test": "jest"
@@ -20,7 +20,7 @@
     "react-native",
     "drawer"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "react-native-vector-icons": "^4.0.0"
   },
   "devDependencies": {
