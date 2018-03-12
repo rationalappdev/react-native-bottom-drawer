@@ -346,7 +346,8 @@ export default class Drawer extends Component {
   getContainerStyle = () => ({
     // Move the view below others if not open or moving
     // to not block gesture handlers on other views
-    zIndex: this.state.pulling || this.state.open ? 1 : -1,
+    //zIndex: this.state.pulling || this.state.open ? 1 : -1,
+    zIndex: 9999999
   });
 }
 
