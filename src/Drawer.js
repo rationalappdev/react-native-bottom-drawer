@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',               // center children
     justifyContent: 'flex-start',       // align popup at the bottom
     backgroundColor: 'black',
+    elevation: 1,                     // fix android dynamic zindex issue
   },
   // Body
   content: {
