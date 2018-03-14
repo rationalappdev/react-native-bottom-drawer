@@ -12,9 +12,11 @@ import {
   View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ExtraDimensions from 'react-native-extra-dimensions-android';
 
 // Get screen dimensions
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+const height = Platform.OS === 'ios' ? Dimensions.get('screen').height : Dimensions.get('screen').height - ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT');
 
 export default class Drawer extends Component {
 
