@@ -16,9 +16,11 @@
 #### Step 1
 
 Install [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons#installation) if you do not already have it.
+Install [react-native-extra-dimensions-android](https://github.com/Sunhat/react-native-extra-dimensions-android#installation) if you do not already have it.
 
 ```
 npm install react-native-vector-icons --save && react-native link react-native-vector-icons
+npm install react-native-extra-dimensions-android --save && react-native link react-native-extra-dimensions-android
 ```
 
 #### Step 2
