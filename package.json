@@ -33,5 +33,9 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "dependencies": {
+    "prop-types": "^15.6.1",
+    "react-native-vector-icons": "^4.5.0"
   }
 }
