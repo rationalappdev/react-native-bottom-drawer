@@ -32,6 +32,7 @@ export default class Drawer extends Component {
     headerHeight: PropTypes.number,
     // Height of the visible teaser area at the bottom of the screen
     teaserHeight: PropTypes.number,
+    onClose: PropTypes.func,
   };
 
   // Set default prop values
@@ -40,6 +41,7 @@ export default class Drawer extends Component {
     header: 'Messages',
     headerHeight: 70,
     teaserHeight: 75,
+    onClose:()=>{}
   };
 
   // Define state
@@ -308,6 +310,7 @@ export default class Drawer extends Component {
 
   // Minimize window and keep a teaser at the bottom
   close = () => {
+    this.props.onClose();
     this._scrollView.scrollTo({ y: 0 });
     Animated.timing(this._animatedPosition, {
       toValue: this.config.position.start,
