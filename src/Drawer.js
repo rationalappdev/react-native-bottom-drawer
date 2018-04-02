@@ -9,17 +9,14 @@ import {
   StatusBar,
   Text,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ExtraDimensions from 'react-native-extra-dimensions-android';
 
 // Get screen dimensions
-const { width } = Dimensions.get('window');
-const height = Platform.OS === 'ios' ? Dimensions.get('screen').height : Dimensions.get('screen').height - ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT');
+const { width, height } = Dimensions.get('window');
 
 export default class Drawer extends Component {
-
   // Define prop types
   static propTypes = {
     // Pass messages to show as children
@@ -32,7 +29,6 @@ export default class Drawer extends Component {
     headerHeight: PropTypes.number,
     // Height of the visible teaser area at the bottom of the screen
     teaserHeight: PropTypes.number,
-    onClose: PropTypes.func,
   };
 
   // Set default prop values
@@ -41,7 +37,6 @@ export default class Drawer extends Component {
     header: 'Messages',
     headerHeight: 70,
     teaserHeight: 75,
-    onClose:()=>{}
   };
 
   // Define state
@@ -67,20 +62,17 @@ export default class Drawer extends Component {
       // minimal possible value - a bit lower the top of the screen
       min: this.props.headerHeight,
       // When animated triggers these value updates
-      animates: [
-        () => this._animatedOpacity,
-        () => this._animatedWidth
-      ]
+      animates: [() => this._animatedOpacity, () => this._animatedWidth],
     },
     // Window width
     width: {
-      end: width,         // takes full with once opened
-      start: width - 20,  // slightly narrower than screen when closed
+      end: width, // takes full with once opened
+      start: width - 20, // slightly narrower than screen when closed
     },
     // Window backdrop opacity
     opacity: {
-      start: 0,   // fully transparent when closed
-      end: 1      // not transparent once opened
+      start: 0, // fully transparent when closed
+      end: 1, // not transparent once opened
     },
   };
 
@@ -94,9 +86,9 @@ export default class Drawer extends Component {
   _animatedWidth = new Animated.Value(this.config.width.start);
 
   // Animates window position
-  _animatedPosition = new Animated.Value(this.props.isOpen
-    ? this.config.position.end
-    : this.config.position.start);
+  _animatedPosition = new Animated.Value(
+    this.props.isOpen ? this.config.position.end : this.config.position.start,
+  );
 
   componentWillMount() {
     // Set current position
@@ -106,9 +98,9 @@ export default class Drawer extends Component {
       // Update _currentPosition
       this._currentPosition = value.value;
       // Animate depending values
-      this.config.position.animates.map(item => {
+      this.config.position.animates.map((item) => {
         item().setValue(value.value);
-      })
+      });
     });
     // Reset value once listener is registered to update depending animations
     this._animatedPosition.setValue(this._animatedPosition._value);
@@ -132,9 +124,8 @@ export default class Drawer extends Component {
     // isOpen prop changed to true from false
     if (!this.props.isOpen && nextProps.isOpen) {
       this.open();
-    }
-    // isOpen prop changed to false from true
-    else if (this.props.isOpen && !nextProps.isOpen) {
+    } else if (this.props.isOpen && !nextProps.isOpen) {
+      // isOpen prop changed to false from true
       this.close();
     }
   }
@@ -148,21 +139,23 @@ export default class Drawer extends Component {
       }),
       // Interpolate position value into width value
       animatedWidth = this._animatedWidth.interpolate({
-        inputRange: [this.config.position.min,// top of the screen
-          this.config.position.start - 50,    // 50 pixels higher than next point
-          this.config.position.start,         // a bit higher than the bottom of the screen
-          this.config.position.max            // the bottom of the screen
+        inputRange: [
+          this.config.position.min, // top of the screen
+          this.config.position.start - 50, // 50 pixels higher than next point
+          this.config.position.start, // a bit higher than the bottom of the screen
+          this.config.position.max, // the bottom of the screen
         ],
-        outputRange: [this.config.width.end,  // keep max width after next point
-          this.config.width.end,              // end: max width at 50 pixel higher
-          this.config.width.start,            // start: min width at the bottom
-          this.config.width.start             // keep min width before previous point
+        outputRange: [
+          this.config.width.end, // keep max width after next point
+          this.config.width.end, // end: max width at 50 pixel higher
+          this.config.width.start, // start: min width at the bottom
+          this.config.width.start, // keep min width before previous point
         ],
       });
     return (
       <Animated.View style={[styles.container, this.getContainerStyle()]}>
         {/* Use light status bar because we have dark background */}
-        <StatusBar barStyle={"light-content"} />
+        <StatusBar barStyle={'light-content'} />
         {/* Backdrop with animated opacity */}
         <Animated.View style={[styles.backdrop, { opacity: animatedOpacity }]}>
           {/* Close window when tapped on header */}
@@ -181,20 +174,28 @@ export default class Drawer extends Component {
         </Animated.View>
         {/* Content container */}
         <Animated.View
-          style={[styles.content, {
-            // Add padding at the bottom to fit all content on the screen
-            paddingBottom: this.props.headerHeight,
-            // Animate width
-            width: animatedWidth,
-            // Animate position on the screen
-            transform: [{ translateY: this._animatedPosition }, { translateX: 0 }]
-          }]}
+          style={[
+            styles.content,
+            {
+              // Add padding at the bottom to fit all content on the screen
+              paddingBottom: this.props.headerHeight,
+              // Animate width
+              width: animatedWidth,
+              // Animate position on the screen
+              transform: [
+                { translateY: this._animatedPosition },
+                { translateX: 0 },
+              ],
+            },
+          ]}
           // Handle gestures
           {...this._panResponder.panHandlers}
         >
           {/* Put all content in a scrollable container */}
           <ScrollView
-            ref={(scrollView) => { this._scrollView = scrollView; }}
+            ref={(scrollView) => {
+              this._scrollView = scrollView;
+            }}
             // Enable scrolling only when the window is open
             scrollEnabled={this.state.open}
             // Hide all scrolling indicators
@@ -217,13 +218,11 @@ export default class Drawer extends Component {
     // Allow if is not open
     if (!this.state.open) {
       return true;
-    }
-    // Allow if user haven't scroll the content yet
-    else if (this.pulledDown(gestureState) && this.state.scrollOffset <= 0) {
+    } else if (this.pulledDown(gestureState) && this.state.scrollOffset <= 0) {
+      // Allow if user haven't scroll the content yet
       return true;
-    }
-    // Allow if pulled down rapidly
-    else if (this.pulledDown(gestureState) && this.pulledFast(gestureState)) {
+    } else if (this.pulledDown(gestureState) && this.pulledFast(gestureState)) {
+      // Allow if pulled down rapidly
       return true;
     }
     // Deny otherwise
@@ -257,46 +256,42 @@ export default class Drawer extends Component {
     // Pulled down and far enough to trigger close
     if (this.pulledDown(gestureState) && this.pulledFar(gestureState)) {
       return this.close();
-    }
-    // Pulled up and far enough to trigger open
-    else if (this.pulledUp(gestureState) && this.pulledFar(gestureState)) {
+    } else if (this.pulledUp(gestureState) && this.pulledFar(gestureState)) {
+      // Pulled up and far enough to trigger open
       return this.open();
-    }
-    // Toggle if tapped
-    else if (this.tapped(gestureState)) {
+    } else if (this.tapped(gestureState)) {
+      // Toggle if tapped
       return this.toggle();
     }
     // Restore back to appropriate position otherwise
-    else {
-      this.restore();
-    }
+    this.restore();
   };
 
   // Handle content scrolling
-  _handleScroll = event => {
+  _handleScroll = (event) => {
     const { y } = event.nativeEvent.contentOffset;
     this.setState({ scrollOffset: y });
   };
 
   // Check if gesture was a tap
-  tapped = (gestureState) => gestureState.dx === 0 && gestureState.dy === 0;
+  tapped = gestureState => gestureState.dx === 0 && gestureState.dy === 0;
 
   // Check if pulled up
-  pulledUp = (gestureState) => gestureState.dy < 0;
+  pulledUp = gestureState => gestureState.dy < 0;
 
   // Check if pulled down
-  pulledDown = (gestureState) => gestureState.dy > 0;
+  pulledDown = gestureState => gestureState.dy > 0;
 
   // Check if pulled rapidly
-  pulledFast = (gestureState) => Math.abs(gestureState.vy) > 0.75;
+  pulledFast = gestureState => Math.abs(gestureState.vy) > 0.75;
 
   // Check if pulled far
-  pulledFar = (gestureState) => Math.abs(gestureState.dy) > 50;
+  pulledFar = gestureState => Math.abs(gestureState.dy) > 50;
 
   // Check if current position is inside allowed range
   insideAllowedRange = () =>
-    this._currentPosition >= this.config.position.min
-    && this._currentPosition <= this.config.position.max;
+    this._currentPosition >= this.config.position.min &&
+    this._currentPosition <= this.config.position.max;
 
   // Open up the window on full screen
   open = () => {
@@ -310,22 +305,24 @@ export default class Drawer extends Component {
 
   // Minimize window and keep a teaser at the bottom
   close = () => {
-    this.props.onClose();
     this._scrollView.scrollTo({ y: 0 });
     Animated.timing(this._animatedPosition, {
       toValue: this.config.position.start,
       duration: 400,
-    }).start(() => this.setState({
-      open: false,
-    }));
+    }).start(() => {
+      this.setState({
+        open: false,
+      });
+
+      this._scrollView.scrollTo({ y: 0 });
+    });
   };
 
   // Toggle window state between opened and closed
   toggle = () => {
     if (!this.state.open) {
       this.open();
-    }
-    else {
+    } else {
       this.close();
     }
   };
@@ -334,17 +331,17 @@ export default class Drawer extends Component {
   restore = () => {
     if (this.state.open) {
       this.open();
-    }
-    else {
+    } else {
       this.close();
     }
   };
 
   // Get header style
   getHeaderStyle = () => ({
-    height: Platform.OS === 'ios'
-      ? this.props.headerHeight
-      : this.props.headerHeight - 40, // compensate for the status bar
+    height:
+      Platform.OS === 'ios'
+        ? this.props.headerHeight
+        : this.props.headerHeight - 40, // compensate for the status bar
   });
 
   // Get container style
@@ -358,28 +355,28 @@ export default class Drawer extends Component {
 const styles = StyleSheet.create({
   // Main container
   container: {
-    ...StyleSheet.absoluteFillObject,   // fill up all screen
-    alignItems: 'center',               // center children
-    justifyContent: 'flex-end',         // align popup at the bottom
-    backgroundColor: 'transparent',     // transparent background
-    elevation: 999,                     // fix android dynamic zindex issue
+    ...StyleSheet.absoluteFillObject, // fill up all screen
+    alignItems: 'center', // center children
+    justifyContent: 'flex-end', // align popup at the bottom
+    backgroundColor: 'transparent', // transparent background
+    elevation: 999, // fix android dynamic zindex issue
   },
   // Semi-transparent background below popup
   backdrop: {
-    ...StyleSheet.absoluteFillObject,   // fill up all screen
-    alignItems: 'center',               // center children
-    justifyContent: 'flex-start',       // align popup at the bottom
+    ...StyleSheet.absoluteFillObject, // fill up all screen
+    alignItems: 'center', // center children
+    justifyContent: 'flex-start', // align popup at the bottom
     backgroundColor: 'black',
   },
   // Body
   content: {
     backgroundColor: 'black',
-    height: height,
+    height,
   },
   // Header
   header: {
-    flexDirection: 'row',               // arrange children in a row
-    alignItems: 'center',               // center vertically
+    flexDirection: 'row', // arrange children in a row
+    alignItems: 'center', // center vertically
     paddingTop: 20,
     paddingHorizontal: 20,
   },
@@ -387,7 +384,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   headerTitle: {
-    flex: 1,                            // take up all available space
+    flex: 1, // take up all available space
   },
   headerText: {
     color: 'white',
