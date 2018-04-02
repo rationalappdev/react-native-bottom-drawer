@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',               // center children
     justifyContent: 'flex-end',         // align popup at the bottom
     backgroundColor: 'transparent',     // transparent background
-    elevation: 1,                     // fix android dynamic zindex issue
+    elevation: 999,                     // fix android dynamic zindex issue
   },
   // Semi-transparent background below popup
   backdrop: {
