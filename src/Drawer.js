@@ -310,9 +310,13 @@ export default class Drawer extends Component {
     Animated.timing(this._animatedPosition, {
       toValue: this.config.position.start,
       duration: 400,
-    }).start(() => this.setState({
-      open: false,
-    }));
+    }).start(() => {
+      this.setState({
+        open: false,
+      });
+
+      this._scrollView.scrollTo({ y: 0 }); //set scrollview to top after drawer completely closed
+    });
   };
 
   // Toggle window state between opened and closed
@@ -357,6 +361,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',               // center children
     justifyContent: 'flex-end',         // align popup at the bottom
     backgroundColor: 'transparent',     // transparent background
+    elevation: 999, // fix android dynamic zindex issue
   },
   // Semi-transparent background below popup
   backdrop: {
