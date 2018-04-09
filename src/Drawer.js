@@ -32,9 +32,9 @@ export default class Drawer extends Component {
     // Height of the visible teaser area at the bottom of the screen
     teaserHeight: PropTypes.number,
     // Content extra style
-    contentStyle: PropTypes.Object,
+    contentStyle: PropTypes.object,
     // Backdrop extra style
-    backdropStyle: PropTypes.Object,
+    backdropStyle: PropTypes.object,
   };
 
   // Set default prop values
