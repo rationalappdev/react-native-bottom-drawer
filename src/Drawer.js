@@ -42,7 +42,9 @@ export default class Drawer extends Component {
     isOpen: false,
     header: "Messages",
     headerHeight: 70,
-    teaserHeight: 75
+    teaserHeight: 75,
+    contentStyle: null,
+    backdropStyle: null,
   };
 
   // Define state
