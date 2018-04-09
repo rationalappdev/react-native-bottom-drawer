@@ -12,9 +12,11 @@ import {
   View
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import ExtraDimensions from 'react-native-extra-dimensions-android';
 
 // Get screen dimensions
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get('window'); 
+const height = Platform.OS === 'ios' ? Dimensions.get('screen').height : Dimensions.get('screen').height - ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT'); 
 
 export default class Drawer extends Component {
   // Define prop types
@@ -28,7 +30,11 @@ export default class Drawer extends Component {
     // Header height
     headerHeight: PropTypes.number,
     // Height of the visible teaser area at the bottom of the screen
-    teaserHeight: PropTypes.number
+    teaserHeight: PropTypes.number,
+    // Content extra style
+    contentStyle: PropTypes.Object,
+    // Backdrop extra style
+    backdropStyle: PropTypes.Object,
   };
 
   // Set default prop values
@@ -157,7 +163,7 @@ export default class Drawer extends Component {
         {/* Use light status bar because we have dark background */}
         <StatusBar barStyle={"light-content"} />
         {/* Backdrop with animated opacity */}
-        <Animated.View style={[styles.backdrop, { opacity: animatedOpacity }]}>
+        <Animated.View style={[styles.backdrop, { opacity: animatedOpacity }, this.props.backdropStyle]}>
           {/* Close window when tapped on header */}
           <TouchableWithoutFeedback onPress={this.close}>
             <View style={[styles.header, this.getHeaderStyle()]}>
@@ -186,7 +192,8 @@ export default class Drawer extends Component {
                 { translateY: this._animatedPosition },
                 { translateX: 0 }
               ]
-            }
+            },
+            this.props.contentStyle,
           ]}
           // Handle gestures
           {...this._panResponder.panHandlers}
