@@ -12,9 +12,11 @@ import {
   View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ExtraDimensions from 'react-native-extra-dimensions-android';
 
 // Get screen dimensions
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+const height = Platform.OS === 'ios' ? Dimensions.get('screen').height : Dimensions.get('screen').height - ExtraDimensions.get('SOFT_MENU_BAR_HEIGHT');
 
 export default class Drawer extends Component {
 
@@ -30,6 +32,7 @@ export default class Drawer extends Component {
     headerHeight: PropTypes.number,
     // Height of the visible teaser area at the bottom of the screen
     teaserHeight: PropTypes.number,
+    onClose: PropTypes.func,
   };
 
   // Set default prop values
@@ -38,6 +41,7 @@ export default class Drawer extends Component {
     header: 'Messages',
     headerHeight: 70,
     teaserHeight: 75,
+    onClose:()=>{}
   };
 
   // Define state
@@ -306,6 +310,7 @@ export default class Drawer extends Component {
 
   // Minimize window and keep a teaser at the bottom
   close = () => {
+    this.props.onClose();
     this._scrollView.scrollTo({ y: 0 });
     Animated.timing(this._animatedPosition, {
       toValue: this.config.position.start,
@@ -357,6 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',               // center children
     justifyContent: 'flex-end',         // align popup at the bottom
     backgroundColor: 'transparent',     // transparent background
+    elevation: 1,                     // fix android dynamic zindex issue
   },
   // Semi-transparent background below popup
   backdrop: {
